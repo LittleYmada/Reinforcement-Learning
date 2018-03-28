@@ -5,7 +5,7 @@ import numpy as np
 INPUT_SIZE = 4
 HIDDEN_UNIT_NUM = 4
 OUTPUT_SIZE = 1
-LEARNING_RATE = 0.001
+LEARNING_RATE = 0.01
 DISCOUNT_RATE = 0.95
 
 def Cartpole_policy():
@@ -13,7 +13,7 @@ def Cartpole_policy():
     X = tf.placeholder(tf.float32, shape=(None, INPUT_SIZE))
     hidden = tf.layers.dense(X, HIDDEN_UNIT_NUM, activation = tf.nn.relu,
                              kernel_initializer = initializer)
-    logit = tf.layers.dense(hidden, OUTPUT_SIZE, activation = tf.nn.relu,
+    logit = tf.layers.dense(hidden, OUTPUT_SIZE, 
                              kernel_initializer = initializer)
     output = tf.nn.sigmoid(logit)
     p_left_right = tf.concat(axis = 1, values = [output, 1 - output])
@@ -96,7 +96,7 @@ if __name__ == "__main__":
                 #all_gradients = [all_gradients[game_index][step][var_index] 
                 #                 for game_index, rewards in enumerate(all_rewards)
                 #                 for step, reward in enumerate(rewards)]
-                mean_gradients = np.mean([all_gradients[game_index][step][var_index]
+                mean_gradients = np.mean([reward * all_gradients[game_index][step][var_index]
                     for game_index, rewards in enumerate(all_rewards)
                     for step, reward in enumerate(rewards)], axis = 0)
                 feed_dict[gradient_placeholder] = mean_gradients
